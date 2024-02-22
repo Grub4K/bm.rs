@@ -1,0 +1,21 @@
+[package]
+name = "bm"
+version = "0.1.0"
+edition = "2021"
+authors = ["Simon Sawicki <Grub4K contact@grub4k.xyz>"]
+description = "Bookmark paths and quickly change into bookmarked directories"
+repository = "https://github.com/Grub4K/bm.rs/"
+readme = "README.md"
+license = "MIT"
+keywords = ["bookmark", "path"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+anstream = "0.6.11"
+anstyle = "1.0.4"
+clap = { version = "4.4.18", features = ["derive", "cargo"] }
+dirs = "5.0.1"
+glob = "0.3.1"
+indoc = "2.0.4"
+owo-colors = { version = "4.0.0", features = ["supports-colors"] }
+path-absolutize = "3.1.1"
