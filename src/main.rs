@@ -35,9 +35,9 @@ enum Actions {
     Ls {
         /// A glob pattern to filter the bookmarks with
         pattern: Option<String>,
-        /// Sort the output by bookmark name
+        /// Keep the ordering as it is in the config file
         #[arg(short, long)]
-        sort: bool,
+        keep_order: bool,
     },
     /// Set a bookmark to the specified path
     Set {
@@ -78,7 +78,7 @@ fn main() {
     std::process::exit(
         match args.action {
             Actions::Cd { pattern } => action_cd::exec(config_path, pattern),
-            Actions::Ls { pattern, sort } => action_ls::exec(config_path, pattern, sort),
+            Actions::Ls { pattern, keep_order } => action_ls::exec(config_path, pattern, !keep_order),
             Actions::Set {
                 force,
                 bookmark,
