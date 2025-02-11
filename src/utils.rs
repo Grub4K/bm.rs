@@ -15,9 +15,8 @@ macro_rules! error {
         use owo_colors::{OwoColorize, Stream, Style};
 
         anstream::eprintln!(
-            "{}{} {}",
-            "error".if_supports_color(Stream::Stderr, |x| Style::new().red().bold().style(x)),
-            ":".if_supports_color(Stream::Stderr, |x| Style::new().style(x.bold())),
+            "{} {}",
+            "error:".if_supports_color(Stream::Stderr, |x| Style::new().red().bold().style(x)),
             format!($t)
         );
     };

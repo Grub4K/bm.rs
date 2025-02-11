@@ -8,11 +8,11 @@ pub fn exec(path: PathBuf, pattern: Option<String>) -> Result<(), i32> {
     match items.len() {
         1 => Ok(println!("{}", items[0].1)),
         0 => {
-            utils::error!("No matching bookmark found");
+            utils::error!("no matching bookmark found");
             Err(1337)
         }
         _ => {
-            utils::error!("More than one matching bookmark found");
+            utils::error!("more than one matching bookmark found");
             Err(1337)
         }
     }

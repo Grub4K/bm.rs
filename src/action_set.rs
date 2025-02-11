@@ -13,23 +13,23 @@ pub fn exec(
         utils::error!("invalid name for a bookmark: {bookmark:?}");
         Err(21)?
     }
-    let set_path = if set_path.is_none() {
-        std::env::current_dir().map_err(|err| {
-            utils::error!("could not determine current directory: {err}");
-            22
-        })
-    } else {
-        set_path.ok_or(23)
-    }?
-    .absolutize()
-    .map_err(|err| {
-        utils::error!("could not set path: {err}");
-        24
-    })?
-    .into_owned()
-    .into_os_string()
-    .into_string()
-    .expect("Why does rust have infinite amounts of string types");
+    let set_path = set_path
+        .ok_or(0)
+        .or_else(|_| {
+            std::env::current_dir().map_err(|err| {
+                utils::error!("could not determine current directory: {err}");
+                22
+            })
+        })?
+        .absolutize()
+        .map_err(|err| {
+            utils::error!("could not set path: {err}");
+            24
+        })?
+        .into_owned()
+        .into_os_string()
+        .into_string()
+        .expect("why does rust have infinite amounts of string types");
     let config = utils::parse_config(path.clone())?;
     if let Some(index) = config
         .iter()
