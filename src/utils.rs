@@ -24,6 +24,20 @@ macro_rules! error {
 
 pub(crate) use error;
 
+macro_rules! warning {
+    ($t: expr) => {
+        use owo_colors::{OwoColorize, Stream, Style};
+
+        anstream::eprintln!(
+            "{} {}",
+            "warning:".if_supports_color(Stream::Stderr, |x| Style::new().yellow().bold().style(x)),
+            format!($t)
+        );
+    };
+}
+
+pub(crate) use warning;
+
 pub fn ensure_config_path(config: Option<PathBuf>) -> Result<PathBuf, u8> {
     let path = match config {
         Some(config) => config,
