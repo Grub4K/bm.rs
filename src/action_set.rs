@@ -1,17 +1,17 @@
-use path_absolutize::*;
+use path_absolutize::Absolutize;
 use std::{fs::OpenOptions, path::PathBuf};
 
 use crate::utils::{self, ConfigItem};
 
 pub fn exec(
     path: PathBuf,
-    bookmark: String,
+    bookmark: &str,
     set_path: Option<PathBuf>,
     force: bool,
 ) -> Result<(), i32> {
-    if !utils::is_valid_bookmark_name(&bookmark) {
+    if !utils::is_valid_bookmark_name(bookmark) {
         utils::error!("invalid name for a bookmark: {bookmark:?}");
-        Err(21)?
+        return Err(21);
     }
     let set_path_buf = set_path
         .ok_or(0)
@@ -45,13 +45,13 @@ pub fn exec(
     {
         if !force {
             utils::error!("key {bookmark:?} already exists");
-            Err(25)?
+            return Err(25);
         }
         utils::write_config(
             path,
             config.iter().enumerate().map(|(line, item)| {
                 if line == index {
-                    ConfigItem::Value(bookmark.clone(), set_path.clone())
+                    ConfigItem::Value(bookmark.to_string(), set_path.clone())
                 } else {
                     item.clone()
                 }
@@ -61,7 +61,7 @@ pub fn exec(
     } else {
         utils::write_config(
             path,
-            vec![ConfigItem::Value(bookmark.clone(), set_path.clone())].into_iter(),
+            vec![ConfigItem::Value(bookmark.to_string(), set_path.clone())].into_iter(),
             OpenOptions::new().append(true),
         )?;
     }

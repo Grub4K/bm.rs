@@ -6,7 +6,10 @@ pub fn exec(path: PathBuf, pattern: Option<String>) -> Result<(), i32> {
     let items = utils::read_config_items(path, pattern)?;
 
     match items.len() {
-        1 => Ok(println!("{}", items[0].1)),
+        1 => {
+            println!("{}", items[0].1);
+            Ok(())
+        },
         0 => {
             utils::error!("no matching bookmark found");
             Err(1337)

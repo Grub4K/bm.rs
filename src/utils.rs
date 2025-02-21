@@ -39,16 +39,13 @@ macro_rules! warning {
 pub(crate) use warning;
 
 pub fn ensure_config_path(config: Option<PathBuf>) -> Result<PathBuf, u8> {
-    let path = match config {
-        Some(config) => config,
-        None => {
-            let mut path = dirs::home_dir().ok_or_else(|| {
-                error!("could not resolve system config dir");
-                10
-            })?;
-            path.extend([".config", "bm", "default.rc"]);
-            path
-        }
+    let path = if let Some(config) = config { config } else {
+        let mut path = dirs::home_dir().ok_or_else(|| {
+            error!("could not resolve system config dir");
+            10
+        })?;
+        path.extend([".config", "bm", "default.rc"]);
+        path
     };
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|err| {
@@ -58,6 +55,7 @@ pub fn ensure_config_path(config: Option<PathBuf>) -> Result<PathBuf, u8> {
     }
     OpenOptions::new()
         .create(true)
+        .truncate(true)
         .write(true)
         .open(&path)
         .map_err(|err| {
@@ -67,7 +65,7 @@ pub fn ensure_config_path(config: Option<PathBuf>) -> Result<PathBuf, u8> {
     Ok(path)
 }
 
-pub fn is_valid_bookmark_name(name: &String) -> bool {
+pub fn is_valid_bookmark_name(name: &str) -> bool {
     name.as_bytes().iter().all(
         |x| matches!(x, b'-' | b'.' | b'/' | b'0'..=b'9' | b':' | b'A'..=b'Z' | b'_' | b'a'..=b'z'),
     )
@@ -98,14 +96,14 @@ pub fn parse_config(path: PathBuf) -> Result<Vec<ConfigItem>, u8> {
             lines.push(ConfigItem::Comment(line));
         } else if let Some((key, value)) = line.split_once('=') {
             let key = key.trim();
-            if !is_valid_bookmark_name(&key.into()) {
+            if !is_valid_bookmark_name(key) {
                 error!("could not parse config: invalid key in line {index}");
-                Err(15)?
+                return Err(15);
             }
             lines.push(ConfigItem::Value(key.into(), value.trim().into()));
         } else {
             error!("could not parse config: no value in line {index}");
-            Err(16)?
+            return Err(16);
         }
     }
     Ok(lines)
@@ -128,7 +126,7 @@ pub fn read_config_items(
                 }
                 Some((key.into(), value.into()))
             }
-            _ => None,
+            ConfigItem::Comment(_) => None,
         })
         .collect())
 }

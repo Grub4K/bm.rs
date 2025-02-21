@@ -83,10 +83,13 @@ fn main() {
                 force,
                 bookmark,
                 path,
-            } => action_set::exec(config_path, bookmark, path, force),
-            Actions::Del { bookmark } => action_del::exec(config_path, bookmark),
+            } => action_set::exec(config_path, bookmark.as_str(), path, force),
+            Actions::Del { bookmark } => action_del::exec(config_path, bookmark.as_str()),
             Actions::Conf { edit } => action_conf::exec(config_path, edit),
-            Actions::Init { shell, alias } => action_init::exec(shell, alias),
+            Actions::Init { shell, alias } => {
+                action_init::exec(&shell, alias);
+                Ok(())
+            },
         }
         .err()
         .unwrap_or(0),

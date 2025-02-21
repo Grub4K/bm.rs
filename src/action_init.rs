@@ -7,7 +7,7 @@ pub enum Shell {
     Bash,
 }
 
-pub fn exec(shell: Shell, alias: Option<String>) -> Result<(), i32> {
+pub fn exec(shell: &Shell, alias: Option<String>) {
     print!(
         "{}",
         match shell {
@@ -55,7 +55,7 @@ pub fn exec(shell: Shell, alias: Option<String>) -> Result<(), i32> {
 
                 alias <{alias}>=__bm_wrapper
                 "#},
-            Shell::Powershell => indoc! {r#"
+            Shell::Powershell => indoc! {r"
                 # Init script for powershell shells
                 # To enable, run the following:
                 # Invoke-Expression (& { (& bm.exe init powershell | Out-String) })
@@ -79,9 +79,8 @@ pub fn exec(shell: Shell, alias: Option<String>) -> Result<(), i32> {
                 }
 
                 Set-Alias -Name <{alias}> -Value __bm_wrapper -Option AllScope -Scope Global -Force
-                "#},
+                "},
         }
-        .replace("<{alias}>", alias.unwrap_or("bm".into()).as_str())
+        .replace("<{alias}>", alias.unwrap_or_else(|| "bm".to_string()).as_str())
     );
-    Ok(())
 }

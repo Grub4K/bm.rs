@@ -8,7 +8,7 @@ pub fn exec(path: PathBuf, edit: bool) -> Result<(), i32> {
         println!("{}", path.display());
         return Ok(());
     }
-    let editor = std::env::var("EDITOR").unwrap_or("vi".into());
+    let editor = std::env::var("EDITOR").unwrap_or_else(|_| "vi".into());
 
     Err(Command::new(editor)
         .arg(path)

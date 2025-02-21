@@ -2,10 +2,10 @@ use std::{fs::OpenOptions, path::PathBuf};
 
 use crate::utils::{self, ConfigItem};
 
-pub fn exec(path: PathBuf, bookmark: String) -> Result<(), i32> {
-    if !utils::is_valid_bookmark_name(&bookmark) {
+pub fn exec(path: PathBuf, bookmark: &str) -> Result<(), i32> {
+    if !utils::is_valid_bookmark_name(bookmark) {
         utils::error!("invalid name for a bookmark: {bookmark:?}");
-        Err(26)?
+        return Err(26);
     }
     let config = utils::parse_config(path.clone())?;
     let _ = config
