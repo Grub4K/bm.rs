@@ -1,8 +1,8 @@
 [package]
 name = "bm"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
-authors = ["Simon Sawicki <Grub4K contact@grub4k.xyz>"]
+authors = ["Simon Sawicki <Grub4K contact@grub4k.dev>"]
 description = "Bookmark paths and quickly change into bookmarked directories"
 repository = "https://github.com/Grub4K/bm.rs/"
 readme = "README.md"
