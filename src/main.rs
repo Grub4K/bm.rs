@@ -39,7 +39,8 @@ enum Actions {
         #[arg(short, long)]
         keep_order: bool,
     },
-    /// Set a bookmark to the specified path
+    /// Set a bookmark to the specified path (alias: add)
+    #[clap(alias = "add")]
     Set {
         /// Force overwriting existing bookmarks
         #[arg(short, long)]
