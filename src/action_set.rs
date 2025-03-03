@@ -1,5 +1,6 @@
 use path_absolutize::Absolutize;
 use std::{fs::OpenOptions, path::PathBuf};
+use owo_colors::{OwoColorize, Stream, Style};
 
 use crate::utils::{self, ConfigItem};
 
@@ -65,6 +66,11 @@ pub fn exec(
             OpenOptions::new().append(true),
         )?;
     }
-    println!("set {bookmark:?} to {set_path}");
+
+    anstream::println!(
+        "{} = {}",
+        bookmark.if_supports_color(Stream::Stdout, |x| Style::new().blue().bold().style(x)),
+        set_path
+    );
     Ok(())
 }
