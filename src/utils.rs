@@ -55,7 +55,7 @@ pub fn ensure_config_path(config: Option<PathBuf>) -> Result<PathBuf, u8> {
     }
     OpenOptions::new()
         .create(true)
-        .truncate(true)
+        .truncate(false)
         .write(true)
         .open(&path)
         .map_err(|err| {
